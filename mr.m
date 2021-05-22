@@ -4,7 +4,7 @@ function [M,Z] = mr(X,initial_alg,lambda1,lambda2,beta)
 [d,n] = size(X);
 switch initial_alg
     case 'SSC'
-        W = sscf(X,lambda1);
+        W = ssc(X,lambda1);
     case 'LRR'
         W = lrr(X,lambda1);
 end   
@@ -41,7 +41,6 @@ while iter < maxiter
     M2 = max(temp - W/mu,0) + min(temp + W/mu,0);
     M2 = max(M2,0);
 
-    
     stopC = max(max(abs(M1 + M2 -N)));
     if iter==1 || mod(iter,50)==0 || stopC<tol
         disp(['iter ' num2str(iter) ',stopC =' num2str(stopC,'%2.3e')]);
@@ -235,7 +234,7 @@ while iter < maxiter
 end
 
 %% Algorithms for obtaining the initial coefficient matrices
-function [Z] = sscf(X,lambda)
+function [Z] = ssc(X,lambda)
 %This routine solves the following l1-norm 
 % optimization problem with l1-error
 % min |Z|_1+lambda*|E|_1
@@ -276,8 +275,7 @@ while iter<maxIter
     
     xmaz = X-X*Z;
     temp = X-X*Z+Y1/mu;
-%     E = max(0,temp - lambda/mu)+min(0,temp + lambda/mu);
-     E = mu*temp/(2*lambda+mu);
+    E = mu*temp/(2*lambda+mu);
      
     leq1 = xmaz-E;
     leq2 = Z-J;
