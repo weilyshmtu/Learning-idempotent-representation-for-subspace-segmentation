@@ -1,11 +1,9 @@
 function [A] = dssc(X,lambda,eta,gamma,type)
 % min_{C,A} 1/2||X - XC||_F^2 + eta1/2|||Z|-eta2*A||_F^2 +eta3||Z||_1
 % A is a doubly stochastic matrix,diag(Z)=0
-
 % eta1 == lambda, eta2 == eta, eta3 == gamma 
 
 [d,n] = size(X);
-
 iter = 0;
 t = 0;
 maxiter = 1e3;
@@ -65,6 +63,7 @@ switch type
             %% update Z
             Z = 1/(1+mu)*(X - L2 + mu*X*(Cp - Cn));
         
+        
             leq1 = Y'*e - e;
             leq2 = Y*e - e;
             leq3 = Y - A;
@@ -103,7 +102,6 @@ switch type
             Ac(:,j) = max(Ac(:,j),0);
          end
          A = (Ac + Ar)/2;
-        
 end
 
 
