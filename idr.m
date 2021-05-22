@@ -3,7 +3,6 @@ function [Z,S,E] = idr(X,k,gamma,lambda)
 % X = XZ + E, eS = e, S>0, S = S',tr(S)=k;
 
 %% parameters
-
 tol = 1e-7;
 maxIter = 1e4;
 rho = 1.1;
@@ -46,6 +45,7 @@ while iter < maxIter
     I_C = I - C;
     A = 2*(1+mu)*I + 2*gamma*(I_C*I_C');
     B = 2*Z + mu*C - Y2 + mu*D  - Y4;
+    
     S = B/A;
     if sum(isnan(S))>0
         S = B*pinv(A);
@@ -77,7 +77,6 @@ while iter < maxIter
     A = mu*(X - X*Z) + Y1;
     E = A/(2*lambda +mu);
 %     E = solve_l1l2(A/mu,beta/mu);
-
 
     leq1 = X - X*Z - E;
     leq2 = S - C;
