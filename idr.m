@@ -117,5 +117,5 @@ nw = norm(w);
 if nw>lambda
     x = (nw-lambda)*w/nw;
 else
-    x = zeros(length(w),1);
+    x = zeros(length(w),1); 
 end
