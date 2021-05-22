@@ -1,14 +1,15 @@
 function [Z,S,E] = idr(X,k,gamma,lambda)
 % min||Z - S||_F^2 + gamma ||S - S^2|| + lambda ||E||_F^2
 % X = XZ + E, eS = e, S>0, S = S',tr(S)=k;
+
 %% parameters
+
 tol = 1e-7;
 maxIter = 1e4;
 rho = 1.1;
 max_mu = 1e30;
 mu = 1e-6;
 
-warning off
 %% Initializing optimization variables
 [d,n] = size(X);
 e = ones(1,n);
@@ -26,6 +27,7 @@ Y1 = zeros(d,n);
 Y2 = zeros(n,n);
 Y3 = zeros(1,n);
 Y4 = zeros(n,n);
+
 %% Start main loop
 iter  = 0;
 while iter < maxIter
@@ -61,9 +63,7 @@ while iter < maxIter
     C = max(C,0);
     C = 0.5*(C + C');
     
-    
     %% update D
-   
     A = S + Y4/mu;
     t = diag(A);    
     D = A - diag(t);
@@ -72,6 +72,7 @@ while iter < maxIter
     d = t + eta/2;
 %     d = quadprog(I,-t',[],[],e,k,[],[],[],opts);
     D = D + diag(d);
+    
     %% update E
     A = mu*(X - X*Z) + Y1;
     E = A/(2*lambda +mu);
@@ -85,7 +86,6 @@ while iter < maxIter
 
     stopC = max([max(max(abs(leq1))),max(max(abs(leq2))),max(max(abs(leq3))),max(max(abs(leq4)))]);
 
-    
     if iter==1 || mod(iter,50)==0 || stopC<tol
         disp(['iter ' num2str(iter) ',mu=' num2str(mu,'%2.1e') ...
             ',rank=' num2str(rank(Z,1e-3*norm(Z,2))) ',stopALM=' num2str(stopC,'%2.3e')]);
@@ -98,9 +98,7 @@ while iter < maxIter
         Y3 = Y3 + mu*leq3;
         Y4 = Y4 + mu*leq4;
         mu = min(max_mu,mu*rho);
-    end
-
-    
+    end   
 end
 
 function [E] = solve_l1l2(W,lambda)
