@@ -1,6 +1,5 @@
 function [M,Z] = mr(X,initial_alg,lambda1,lambda2,beta)
 
-
 [d,n] = size(X);
 switch initial_alg
     case 'SSC'
@@ -9,8 +8,8 @@ switch initial_alg
         W = lrr(X,lambda1);
 end   
 
- M = funM1(W,n,lambda2);
- Z = funZ1(M,n,beta);
+M = funM1(W,n,lambda2);
+Z = funZ1(M,n,beta);
 
 %% Searching M and Z by using classical ALM
 function M1 = funM1(W,n,lambda2)
@@ -104,7 +103,7 @@ while iter < maxiter
         end
     end
     
-     stopC = max([max(max(abs(e*Z1-e))),max(max(abs(Z1-Z2)))]);
+    stopC = max([max(max(abs(e*Z1-e))),max(max(abs(Z1-Z2)))]);
     if iter==1 || mod(iter,50)==0 || stopC<tol
         disp(['iter ' num2str(iter) ',stopC =' num2str(stopC,'%2.3e')]);
     end
@@ -112,13 +111,11 @@ while iter < maxiter
         disp('Z is updated!');
         disp('--------------------')
         break;
-      
     else
         Y1 = Y1 + mu*(e*Z1 - e);
         Y2 = Y2 + mu*(Z1 - Z2);
         mu = min(maxmu,mu*rho);
     end
-    
 end
 
 
