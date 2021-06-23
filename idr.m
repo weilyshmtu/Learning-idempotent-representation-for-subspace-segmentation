@@ -1,4 +1,4 @@
-function [Z,S,elapse,iter,residualZ,residualS,residualE] = idr(X,k,gamma,lambda)
+function [Z,S,E,elapse,iter,residualZ,residualS,residualE] = idr(X,k,gamma,lambda)
 % min||Z - S||_F^2 + gamma ||S - S^2|| + lambda ||E||_F^2
 % X = XZ + E, eS = e, S>0, S = S',tr(S)=k;
 t0 = cputime;
