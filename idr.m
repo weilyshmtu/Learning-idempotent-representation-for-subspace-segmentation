@@ -42,6 +42,7 @@ while iter < maxIter
     if iter > 1
         residualZ(iter) = norm(Z-preZ,'fro');
     end
+    
     %% update S
     I_C = I - C;
     A = 2*(1+mu)*I + 2*gamma*(I_C*I_C');
@@ -53,6 +54,7 @@ while iter < maxIter
     if iter > 1 
         residualS(iter) = norm(S-preS,'fro');
     end
+    
     %% update C
     A = 2*gamma*(S'*S) + mu*(I + ete);
     B = 2*gamma*(S'*S) + mu*S + Y2 + mu*ete - e'*Y3;
@@ -87,7 +89,7 @@ while iter < maxIter
     
     if iter==1 || mod(iter,50)==0 || stopC<tol
         disp(['iter ' num2str(iter) ',mu=' num2str(mu,'%2.1e') ...
-            ',rank=' num2str(rank(Z,1e-3*norm(Z,2))) ',stopALM=' num2str(stopC,'%2.3e')]);
+            ',stopALM=' num2str(stopC,'%2.3e')]);
     end
     if stopC<tol 
         elapse = cputime - t0;
