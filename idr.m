@@ -39,7 +39,9 @@ while iter < maxIter
     B = 2*preS + mu*(XtX - X'*preE) + X'*Y1;
     Z = A\B;
     
-    residualZ(iter) = norm(Z-preZ,'fro');
+    if iter > 1
+        residualZ(iter) = norm(Z-preZ,'fro');
+    end
     %% update S
     I_C = I - C;
     A = 2*(1+mu)*I + 2*gamma*(I_C*I_C');
@@ -48,7 +50,9 @@ while iter < maxIter
     S = max(S,0);
     S = 0.5*(S + S');
     
-    residualS(iter) = norm(S-preS,'fro');
+    if iter > 1 
+        residualS(iter) = norm(S-preS,'fro');
+    end
     %% update C
     A = 2*gamma*(S'*S) + mu*(I + ete);
     B = 2*gamma*(S'*S) + mu*S + Y2 + mu*ete - e'*Y3;
@@ -63,21 +67,23 @@ while iter < maxIter
     d = t + eta/2;
 %     d = quadprog(I,-t',[],[],e,k,[],[],[],opts);
     D = D + diag(d);
+    
     %% update E
     A = mu*(X - X*Z) + Y1;
 %     E = A/(2*lambda +mu);
 %     E = max(0,A/mu - lambda/mu)+min(0,A/mu + lambda/mu);
     E = solve_l1l2(A/mu,lambda/mu);
     
-    residualE(iter) = norm(E-preE,'fro');
-
+    if iter > 1
+        residualE(iter) = norm(E-preE,'fro');
+    end
+    
     leq1 = X - X*Z - E;
     leq2 = S - C;
     leq3 = e*C - e;
     leq4 = S - D;
 
     stopC = max([max(max(abs(leq1))),max(max(abs(leq2))),max(max(abs(leq3))),max(max(abs(leq4)))]);
-
     
     if iter==1 || mod(iter,50)==0 || stopC<tol
         disp(['iter ' num2str(iter) ',mu=' num2str(mu,'%2.1e') ...
